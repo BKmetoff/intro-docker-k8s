@@ -1,0 +1,38 @@
+mongoDB:
+  detached: -d
+  name: goals-mongodb
+  network: goals-network
+  volumes:
+    preserve_db: '/Users/boyankmetov/Downloads/Code/docker-kubernetes/06-networking-FS/mongo-db:/data/db'
+  publish: -p 27017:27017 # don't publish if ran in network
+  env_vars:
+    username: MONGO_INITDB_ROOT_USERNAME=goalsadmin
+    password: MONGO_INITDB_ROOT_PASSWORD=goalspassword
+  image: mongo
+
+api:
+  prep_extras:
+    dev-dependency: nodemon
+    mongo_auth_url: mongodb://[username:password]@[container_name][port]/[...]?[authSource=admin]
+  detached: -d
+  publish: 80:80
+  network: goals-network
+  name: goals-api
+  volumes:
+    persist_logs: goals-api-logs:/app/logs
+    mount_for_live_updates: '/Users/boyankmetov/Downloads/Code/docker-kubernetes/06-networking-FS/backend:/app'
+    preserve_dependencies: /app/node_modules
+  env_vars:
+    DB_USERNAME: goalsadmin
+    DB_PASSWORD: goalspassword
+  image: goals-api
+
+spa:
+  interactive: -it
+  publish: 4000:4000
+  name: goals-spa
+  network: goals-network
+  volumes:
+    mount_for_live_updates: -v "/Users/boyankmetov/Downloads/Code/docker-kubernetes/06-networking-FS/frontend:/app"
+    preserve_dependencies: -v /app/node_modules
+  image: goals-spa

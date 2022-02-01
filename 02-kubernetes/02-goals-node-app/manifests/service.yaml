@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: goals-fe-service
+spec:
+  selector:
+    app: goals-fe
+  ports:
+    - protocol: 'TCP'
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: goals-be-service
+spec:
+  selector:
+    app: goals-be
+  ports:
+    - protocol: 'TCP'
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

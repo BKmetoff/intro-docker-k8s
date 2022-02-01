@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: declarative-service
+  labels:
+    group: example-label
+
+# configures service
+spec:
+  # selects pods to be controlled by service.
+  # can only select 'labels' by default.
+  selector:
+    app: declarative-deployment-pod
+
+  ports: # array
+    - protocol: 'TCP'
+      port: 80 # port exposed to the outside
+      targetPort: 8080 # port container listens to
+
+  type: LoadBalancer

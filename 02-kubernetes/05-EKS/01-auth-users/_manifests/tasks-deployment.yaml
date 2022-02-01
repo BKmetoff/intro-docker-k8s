@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasks-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasks
+  template:
+    metadata:
+      labels:
+        app: tasks
+    spec:
+      containers:
+        - name: tasks-api
+          image: bkmetoff/eks-tasks:latest
+          imagePullPolicy: Always
+          env:
+            - name: MONGODB_CONNECTION_URI
+              value: 'mongodb+srv://eks-user:gsMGroPX1ORwZTCs@docker-course.aqs5s.mongodb.net/docker-course?retryWrites=true&w=majority'
+            - name: AUTH_API_ADDRESS
+              value: 'auth-service.default:3000'

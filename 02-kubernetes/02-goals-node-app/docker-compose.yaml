@@ -1,0 +1,20 @@
+version: '3.8'
+services:  
+  backend:
+    build: ./backend
+    ports:
+      - '80:80'
+    env_file:
+      - ./env/backend.env
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '4000:8080'
+    depends_on:
+      - backend
+    
+    # keep container with dev server alive:
+    # stdin_open: true
+    # tty: true
+    

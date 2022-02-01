@@ -1,0 +1,12 @@
+# start individual service:
+# docker-compose run npm
+
+version: '3.8'
+services:
+  npm:
+    build: ./
+    volumes:
+      - ./:/app
+    container_name: npm-util
+    stdin_open: true
+    tty: true

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: declarative-deployment-v1
+  labels:
+    group: example-label
+
+# configures deployment
+spec:
+  replicas: 3
+
+  # selects pods to be controlled by deployment
+  selector:
+    matchLabels:
+      app: declarative-deployment-pod
+
+  # describes pods managed by deployment
+  template:
+    metadata:
+      labels:
+        app: declarative-deployment-pod
+
+    # configures individual pods
+    spec:
+      containers: # array
+        - name: declarative-deployment-container
+          image: bkmetoff/k8-first-dep:v4
+          imagePullPolicy: Always
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 8080
+          #   periodSeconds: 5
+          #   initialDelaySeconds: 5
+          env:
+            - name: TEST_VAR_KEY
+              value: TEST_VAR_VALUE

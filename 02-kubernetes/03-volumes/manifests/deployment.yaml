@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stories-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: stories-api
+  template:
+    metadata:
+      labels:
+        app: stories-api
+    spec:
+      containers:
+        - name: stories-container
+          image: bkmetoff/stories-api:v2
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /app/story
+              name: stories-volume
+          env:
+            - name: STORY_FOLDER
+              valueFrom:
+                configMapKeyRef:
+                  name: story-env-vars
+                  key: folder
+
+      volumes:
+        - name: stories-volume
+          persistentVolumeClaim:
+            claimName: host-pv-claim
+
+          # hostPath: # similar to bind mounts
+          #   path: /data
+          #   type: DirectoryOrCreate

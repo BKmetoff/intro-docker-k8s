@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goals-fe
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: goals-fe
+  template:
+    metadata:
+      labels:
+        app: goals-fe
+    spec:
+      containers:
+        - name: goals-spa
+          image: bkmetoff/goals-node-fe:v3
+          imagePullPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goals-be
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: goals-be
+  template:
+    metadata:
+      labels:
+        app: goals-be
+    spec:
+      containers:
+        - name: goals-node-api
+          image: bkmetoff/goals-node-be:v1
+          imagePullPolicy: Always

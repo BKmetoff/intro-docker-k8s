@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasks-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasks
+  template:
+    metadata:
+      labels:
+        app: tasks
+    spec:
+      containers:
+        - name: tasks
+          image: bkmetoff/net-tasks:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /app/tasks
+              name: tasks-pv
+          env:
+            - name: AUTH_URL
+              value: auth-service.default
+            - name: TASKS_FOLDER
+              value: 'tasks'
+      volumes:
+        - name: tasks-pv
+          persistentVolumeClaim:
+            claimName: tasks-pv-claim

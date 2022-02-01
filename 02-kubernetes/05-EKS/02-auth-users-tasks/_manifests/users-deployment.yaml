@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+        - name: users-api
+          image: bkmetoff/eks-users:latest
+          imagePullPolicy: Always
+          env:
+            - name: MONGODB_CONNECTION_URI
+              value: 'mongodb+srv://eks-user:gsMGroPX1ORwZTCs@docker-course.aqs5s.mongodb.net/docker-course?retryWrites=true&w=majority'
+            - name: AUTH_API_ADDRESS
+              value: 'auth-service.default:3000'
+          volumeMounts:
+            - name: users-efs-pv
+              mountPath: /app/users
+      volumes:
+        - name: users-efs-pv
+          persistentVolumeClaim:
+            claimName: users-efs-pv-claim

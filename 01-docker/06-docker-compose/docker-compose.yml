@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  mongodb:
+    image: 'mongo'
+    volumes:
+      # - goals_data:/data/db
+      - ./goals_data:/data/db
+    container_name: goals-mongodb
+    env_file:
+      - ./.env/.mongodb.env
+  
+  backend:
+    build: ./backend
+    ports:
+      - '80:80'
+    volumes:
+      # - goals_logs:/app/logs
+      - ./backend/logs:/app/logs
+      - /app/node_modules
+      - ./backend:/app
+    env_file:
+      - ./.env/.backend.env
+    container_name: goals-api
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '4000:3000'
+    volumes:
+      - /app/node_modules
+      - ./frontend/src:/app/src
+    container_name: goals-spa
+    depends_on:
+      - backend
+      - mongodb
+    stdin_open: true
+    tty: true
+    
+     
+# only add named volumes
+# volumes:
+  # goals_data:
+  # goals_logs:
